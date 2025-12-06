@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Khitanan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1e6b52 0%, #0d3b2a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Latar belakang dengan pola Islami */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50,0 C77.614,0 100,22.386 100,50 C100,77.614 77.614,100 50,100 C22.386,100 0,77.614 0,50 C0,22.386 22.386,0 50,0 Z" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/><text x="50" y="55" text-anchor="middle" font-size="40" fill="rgba(255,255,255,0.03)" font-family="Georgia">ﷲ</text></svg>');
+            background-size: 150px;
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        .cover {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e6b52 0%, #0d3b2a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .cover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><text x="100" y="110" text-anchor="middle" font-size="120" fill="rgba(255,255,255,0.1)" font-family="Georgia">ﷲ</text></svg>');
+            background-size: 300px;
+            background-position: center;
+            opacity: 0.2;
+        }
+        
+        .cover.hide {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+        
+        .cover-content {
+            text-align: center;
+            color: white;
+            animation: fadeInUp 1s ease;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cover-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            color: #f1c40f;
+            font-family: 'Georgia', serif;
+        }
+        
+        .cover-content p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .open-btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            background: linear-gradient(135deg, #f1c40f 0%, #d4ac0d 100%);
+            color: #0d3b2a;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+            font-family: 'Georgia', serif;
+        }
+        
+        .open-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, #f7dc6f 0%, #f1c40f 100%);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .container {
+            max-width: 600px;
+            background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+            position: relative;
+            border: 1px solid rgba(29, 107, 82, 0.1);
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><text x="30" y="35" text-anchor="middle" font-size="30" fill="rgba(29, 107, 82, 0.03)" font-family="Georgia">ﷲ</text></svg>');
+            background-size: 80px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e6b52 0%, #0d3b2a 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="50" y="55" text-anchor="middle" font-size="40" fill="rgba(255,255,255,0.1)" font-family="Georgia">ﷲ</text></svg>');
+            background-size: 120px;
+            opacity: 0.3;
+        }
+        
+        .floating-icon {
+            position: absolute;
+            font-size: 30px;
+            animation: float 3s ease-in-out infinite;
+            opacity: 0.7;
+            color: #f1c40f;
+        }
+        
+        .floating-icon:nth-child(1) {
+            top: 20px;
+            left: 30px;
+            animation-delay: 0s;
+        }
+        
+        .floating-icon:nth-child(2) {
+            top: 20px;
+            right: 30px;
+            animation-delay: 1s;
+        }
+        
+        .floating-icon:nth-child(3) {
+            bottom: 20px;
+            left: 50px;
+            animation-delay: 2s;
+        }
+        
+        .floating-icon:nth-child(4) {
+            bottom: 20px;
+            right: 50px;
+            animation-delay: 1.5s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
+            color: #f1c40f;
+        }
+        
+        .header p {
+            font-size: 18px;
+            font-style: italic;
+            position: relative;
+            z-index: 10;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .bismillah {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #1e6b52;
+            margin-bottom: 25px;
+            animation: fadeIn 1s ease;
+            font-family: 'Traditional Arabic', 'Georgia', serif;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .intro {
+            text-align: center;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 17px;
+        }
+        
+        .child-name {
+            text-align: center;
+            margin: 35px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #f0f7f4 0%, #ffffff 100%);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(29, 107, 82, 0.1);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(29, 107, 82, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .child-name::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #1e6b52, #f1c40f);
+        }
+        
+        .child-name:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(29, 107, 82, 0.2);
+        }
+        
+        .photo-container {
+            margin-bottom: 25px;
+            display: inline-block;
+            position: relative;
+        }
+        
+        .photo-container::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(135deg, #1e6b52, #f1c40f);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .photo-container img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 10px 30px rgba(29, 107, 82, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .photo-container img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(29, 107, 82, 0.4);
+        }
+        
+        .child-name h2 {
+            font-size: 40px;
+            color: #0d3b2a;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+            font-family: 'Georgia', serif;
+        }
+        
+        .child-name h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, #1e6b52, #f1c40f);
+            border-radius: 2px;
+        }
+        
+        .child-name p {
+            color: #666;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        
+        .details {
+            background: linear-gradient(135deg, #f0f7f4 0%, #ffffff 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border-left: 5px solid #1e6b52;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(29, 107, 82, 0.1);
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #444;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(29, 107, 82, 0.1);
+        }
+        
+        .detail-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(29, 107, 82, 0.2);
+            border-left: 5px solid #f1c40f;
+        }
+        
+        .detail-item strong {
+            min-width: 100px;
+            color: #1e6b52;
+            font-size: 16px;
+        }
+        
+        .icon {
+            font-size: 24px;
+            margin-right: 15px;
+            min-width: 30px;
+            text-align: center;
+            color: #1e6b52;
+        }
+        
+        .countdown {
+            background: linear-gradient(135deg, #1e6b52 0%, #0d3b2a 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+            border: 1px solid rgba(241, 196, 15, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .countdown::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><text x="40" y="45" text-anchor="middle" font-size="30" fill="rgba(255,255,255,0.1)" font-family="Georgia">ﷲ</text></svg>');
+            background-size: 100px;
+            opacity: 0.3;
+        }
+        
+        .countdown h3 {
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #f1c40f;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .time-box {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            min-width: 70px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(241, 196, 15, 0.3);
+        }
+        
+        .time-box .number {
+            font-size: 32px;
+            font-weight: bold;
+            display: block;
+            color: white;
+        }
+        
+        .time-box .label {
+            font-size: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            color: #f1c40f;
+        }
+        
+        .map-btn, .calendar-btn {
+            display: inline-block;
+            margin: 10px 5px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #1e6b52 0%, #0d3b2a 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            box-shadow: 0 5px 15px rgba(29, 107, 82, 0.3);
+            border: none;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+        }
+        
+        .map-btn:hover, .calendar-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(29, 107, 82, 0.4);
+            background: linear-gradient(135deg, #2a8c6f 0%, #1e6b52 100%);
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        /* STYLE BARU: INFORMASI REKENING BANK */
+        .bank-section {
+            background: linear-gradient(135deg, #f0f7f4 0%, #ffffff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            border: 1px solid rgba(29, 107, 82, 0.1);
+        }
+        
+        .bank-section h3 {
+            color: #0d3b2a;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .bank-logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .bank-logo {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        .bank-details {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            margin: 15px 0;
+            border: 1px solid rgba(29, 107, 82, 0.1);
+        }
+        
+        .bank-info-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f0f7f4;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(29, 107, 82, 0.1);
+        }
+        
+        .bank-info-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 8px rgba(29, 107, 82, 0.2);
+            border-left: 5px solid #f1c40f;
+        }
+        
+        .bank-icon {
+            font-size: 20px;
+            margin-right: 15px;
+            min-width: 30px;
+            text-align: center;
+            color: #1e6b52;
+        }
+        
+        .bank-label {
+            font-weight: bold;
+            color: #555;
+            min-width: 150px;
+            text-align: left;
+        }
+        
+        .bank-value {
+            color: #0d3b2a;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .copy-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #1e6b52 0%, #0d3b2a 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+        
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(29, 107, 82, 0.3);
+            background: linear-gradient(135deg, #2a8c6f 0%, #1e6b52 100%);
+        }
+        
+        /* STYLE BARU: KONFIRMASI KEHADIRAN */
+        .attendance-section {
+            background: linear-gradient(135deg, #f0f7f4 0%, #ffffff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(29, 107, 82, 0.1);
+        }
+        
+        .attendance-section h3 {
+            text-align: center;
+            color: #0d3b2a;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        
+        .attendance-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .attendance-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Georgia', serif;
+        }
+        
+        .attendance-btn.hadir {
+            background: linear-gradient(135deg, #1e6b52 0%, #0d3b2a 100%);
+            color: white;
+        }
+        
+        .attendance-btn.tidak-hadir {
+            background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+            color: white;
+        }
+        
+        .attendance-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        .attendance-btn.selected {
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.8), 0 0 0 6px rgba(29, 107, 82, 0.5);
+        }
+        
+        .attendance-status {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border: 1px solid rgba(29, 107, 82, 0.1);
+        }
+        
+        .attendance-status p {
+            color: #555;
+            font-size: 16px;
+        }
+        
+        .attendance-count {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .count-box {
+            background: rgba(29, 107, 82, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 100px;
+            border: 1px solid rgba(29, 107, 82, 0.1);
+        }
+        
+        .count-box .number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e6b52;
+            display: block;
+        }
+        
+        .count-box .label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* STYLE BARU: UCAPAN SELAMAT */
+        .greetings-section {
+            background: linear-gradient(135deg, #f0f7f4 0%, #ffffff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(29, 107, 82, 0.1);
+        }
+        
+        .greetings-section h3 {
+            text-align: center;
+            color: #0d3b2a;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        
+        .greeting-form {
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(29, 107, 82, 0.3);
+            border-radius: 10px;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #1e6b52;
+            box-shadow: 0 0 0 3px rgba(29, 107, 82, 0.2);
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1e6b52 0%, #0d3b2a 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(29, 107, 82, 0.3);
+            background: linear-gradient(135deg, #2a8c6f 0%, #1e6b52 100%);
+        }
+        
+        .greetings-list {
+            margin-top: 25px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .greeting-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid #1e6b52;
+            animation: slideIn 0.5s ease;
+            border: 1px solid rgba(29, 107, 82, 0.1);
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .greeting-item .name {
+            font-weight: bold;
+            color: #1e6b52;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .greeting-item .message {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        .greeting-item .time {
+            font-size: 12px;
+            color: #888;
+            text-align: right;
+        }
+        
+        .no-greetings {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+            padding: 20px;
+        }
+        
+        .parents {
+            text-align: center;
+            margin: 35px 0;
+            color: #555;
+            line-height: 1.8;
+            padding: 25px;
+            background: #f0f7f4;
+            border-radius: 15px;
+            border: 1px solid rgba(29, 107, 82, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .parents::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #1e6b52, #f1c40f);
+        }
+        
+        .parents strong {
+            color: #0d3b2a;
+            font-size: 18px;
+            display: block;
+            margin: 10px 0;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #f0f7f4 0%, #ffffff 100%);
+            color: #666;
+            font-style: italic;
+            line-height: 1.8;
+            border-top: 1px solid rgba(29, 107, 82, 0.1);
+        }
+        
+        .decorative-line {
+            height: 2px;
+            background: linear-gradient(to right, transparent, #1e6b52, transparent);
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .decorative-line::before {
+            content: '✦';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 0 10px;
+            color: #1e6b52;
+            font-size: 20px;
+        }
+        
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e6b52 0%, #0d3b2a 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(29, 107, 82, 0.4);
+            transition: all 0.3s ease;
+            z-index: 100;
+            border: 2px solid rgba(241, 196, 15, 0.3);
+        }
+        
+        .music-control:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(29, 107, 82, 0.5);
+            background: linear-gradient(135deg, #2a8c6f 0%, #1e6b52 100%);
+        }
+        
+        .music-control span {
+            color: #f1c40f;
+            font-size: 24px;
+        }
+        
+        .music-notice {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: rgba(29, 107, 82, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            max-width: 200px;
+            text-align: center;
+            animation: slideIn 0.5s ease;
+            z-index: 99;
+            border: 1px solid rgba(241, 196, 15, 0.3);
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .child-name h2 {
+                font-size: 32px;
+            }
+            
+            .detail-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .detail-item strong {
+                margin-bottom: 5px;
+            }
+            
+            .bank-info-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .bank-label {
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+            
+            .attendance-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .attendance-btn {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
+            }
+            
+            .attendance-count {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .music-control {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .music-notice {
+                bottom: 90px;
+                right: 15px;
+                max-width: 150px;
+            }
+            
+            .cover-content h1 {
+                font-size: 36px;
+            }
+            
+            .cover-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cover Page -->
+    <div class="cover" id="cover">
+        <div class="cover-content">
+            <h1>Undangan Khitanan</h1>
+            <p>Dengan memohon rahmat Allah SWT</p>
+            <button class="open-btn" onclick="openInvitation()">Buka Undangan</button>
+        </div>
+    </div>
+
+    <!-- Music Control -->
+    <div class="music-control" onclick="toggleMusic()" id="musicBtn">
+        <span id="musicIcon">🎵</span>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container" id="mainContent">
+        <div class="header">
+            <div class="floating-icon">🌙</div>
+            <div class="floating-icon">⭐</div>
+            <div class="floating-icon">🕌</div>
+            <div class="floating-icon">☪️</div>
+            <h1>Undangan Khitanan</h1>
+            <p>بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيْمِ</p>
+        </div>
+        
+        <div class="content">
+            <div class="bismillah">
+                بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+            </div>
+            
+            <div class="intro">
+                <p>السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</p>
+                <p>Dengan penuh rasa syukur kehadirat Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara khitanan putra kami:</p>
+            </div>
+            
+            <div class="child-name">
+                <div class="photo-container">
+                    <img src="221117BDJHN3A3.png" alt="Foto Anak">
+                </div>
+                <h2>(Nama Anak)</h2>
+                <p>Putra dari (Nama Orang Tua)</p>
+            </div>
+            
+            <div class="decorative-line"></div>
+            
+            <div class="details">
+                <div class="detail-item">
+                    <span class="icon">📅</span>
+                    <strong>Hari/Tanggal:</strong>
+                    <span>Sabtu, 15 Desember 2025</span>
+                </div>
+                <div class="detail-item">
+                    <span class="icon">🕘</span>
+                    <strong>Waktu:</strong>
+                    <span>09.00 WIB - Selesai</span>
+                </div>
+                <div class="detail-item">
+                    <span class="icon">📍</span>
+                    <strong>Tempat:</strong>
+                    <span>(Alamat Lengkap)</span>
+                </div>
+            </div>
+
+            <!-- Countdown Timer -->
+            <div class="countdown">
+                <h3>⏰ Hitung Mundur Acara</h3>
+                <div class="countdown-timer" id="countdown">
+                    <div class="time-box">
+                        <span class="number" id="days">00</span>
+                        <span class="label">Hari</span>
+                    </div>
+                    <div class="time-box">
+                        <span class="number" id="hours">00</span>
+                        <span class="label">Jam</span>
+                    </div>
+                    <div class="time-box">
+                        <span class="number" id="minutes">00</span>
+                        <span class="label">Menit</span>
+                    </div>
+                    <div class="time-box">
+                        <span class="number" id="seconds">00</span>
+                        <span class="label">Detik</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="btn-container">
+                <button class="map-btn" onclick="openMap()">📍 Lihat Lokasi</button>
+                <button class="calendar-btn" onclick="addToCalendar()">📅 Tambah ke Kalender</button>
+            </div>
+            
+            <div class="decorative-line"></div>
+            
+            <!-- Bagian Baru: Informasi Rekening Bank -->
+            <div class="bank-section">
+                <h3><span>🏦</span> Informasi Rekening Bank</h3>
+                <p style="text-align: center; color: #666; margin-bottom: 15px;">Bagi yang ingin memberikan hadiah/amplop, dapat melalui rekening berikut:</p>
+                
+                <div class="bank-logo-container">
+                    <!-- Logo Bank BSI -->
+                    <img src="BSI-Bank-Syariah-Indonesia-Logo-PNG720p-Vector69Com.webp" alt="Logo Bank BSI" class="bank-logo">
+                </div>
+                
+                <div class="bank-details">
+                    <div class="bank-info-item">
+                        <span class="bank-icon">🏦</span>
+                        <span class="bank-label">Nama Bank:</span>
+                        <span class="bank-value">BANK SYARIAH INDONESIA (BSI)</span>
+                    </div>
+                    
+                    <div class="bank-info-item">
+                        <span class="bank-icon">💳</span>
+                        <span class="bank-label">Nomor Rekening:</span>
+                        <span class="bank-value">1234 5678 9012 3456</span>
+                    </div>
+                    
+                    <div class="bank-info-item">
+                        <span class="bank-icon">👤</span>
+                        <span class="bank-label">Nama Pemilik:</span>
+                        <span class="bank-value">(Nama Pemilik)</span>
+                    </div>
+                </div>
+                
+                <button class="copy-btn" onclick="copyAccountNumber()">📋 Salin Nomor Rekening</button>
+            </div>
+            
+            <div class="decorative-line"></div>
+            
+            <!-- Bagian Baru: Konfirmasi Kehadiran -->
+            <div class="attendance-section">
+                <h3>Konfirmasi Kehadiran</h3>
+                <p style="text-align: center; color: #666; margin-bottom: 15px;">Mohon konfirmasikan kehadiran Anda:</p>
+                
+                <div class="attendance-buttons">
+                    <button class="attendance-btn hadir" onclick="confirmAttendance('hadir')">
+                        <span>✅</span> Hadir
+                    </button>
+                    <button class="attendance-btn tidak-hadir" onclick="confirmAttendance('tidak-hadir')">
+                        <span>❌</span> Tidak Hadir
+                    </button>
+                </div>
+                
+                <div class="attendance-status">
+                    <p>Status Anda: <strong id="userAttendanceStatus">Belum dikonfirmasi</strong></p>
+                </div>
+                
+                <div class="attendance-count">
+                    <div class="count-box">
+                        <span class="number" id="hadirCount">0</span>
+                        <span class="label">Akan Hadir</span>
+                    </div>
+                    <div class="count-box">
+                        <span class="number" id="tidakHadirCount">0</span>
+                        <span class="label">Tidak Hadir</span>
+                    </div>
+                    <div class="count-box">
+                        <span class="number" id="totalCount">0</span>
+                        <span class="label">Total Konfirmasi</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="decorative-line"></div>
+            
+            <!-- Bagian Baru: Ucapan Selamat -->
+            <div class="greetings-section">
+                <h3>📝 Ucapan & Doa</h3>
+                
+                <div class="greeting-form">
+                    <form id="greetingForm">
+                        <div class="form-group">
+                            <label for="guestName">Nama Anda:</label>
+                            <input type="text" id="guestName" class="form-control" placeholder="Masukkan nama Anda" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="greetingMessage">Ucapan & Doa:</label>
+                            <textarea id="greetingMessage" class="form-control" placeholder="Tuliskan ucapan selamat dan doa untuk anak kami" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Kirim Ucapan & Doa</button>
+                    </form>
+                </div>
+                
+                <div class="greetings-list" id="greetingsList">
+                    <div class="no-greetings">Belum ada ucapan. Jadilah yang pertama memberikan doa!</div>
+                </div>
+            </div>
+            
+            <div class="decorative-line"></div>
+            
+            <div class="parents">
+                <p>Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.</p>
+                <br>
+                <strong>Keluarga Besar</strong>
+                <strong>(Nama Ayah) & (Nama Ibu)</strong>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Atas kehadiran dan doa restunya, kami mengucapkan jazakumullahu khairan katsira</p>
+            <p>وَالسَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</p>
+        </div>
+    </div>
+
+    <!-- Musik latar Islami -->
+    <audio id="backgroundMusic" loop>
+        <!-- MUSIK ISLAMI - Ganti dengan file musik Anda sendiri -->
+        <source src="videoplayback.m4a">
+        Browser Anda tidak mendukung elemen audio.
+    </audio>
+
+    <script>
+        // Variabel global
+        let musicPlaying = false;
+        const music = document.getElementById('backgroundMusic');
+        
+        // Fungsi untuk membuka undangan
+        function openInvitation() {
+            document.getElementById('cover').classList.add('hide');
+            setTimeout(() => {
+                document.getElementById('mainContent').classList.add('show');
+                
+                // Otomatis mulai musik setelah undangan dibuka (dengan volume rendah)
+                try {
+                    music.volume = 0.3;
+                    music.play();
+                    musicPlaying = true;
+                    document.getElementById('musicIcon').textContent = '🔊';
+                    showMusicNotice("Musik latar telah dimulai");
+                } catch (error) {
+                    console.log("Autoplay diblokir: ", error);
+                    showMusicNotice("Klik ikon musik untuk memulai");
+                }
+                
+                // Muat data kehadiran dan ucapan saat undangan dibuka
+                loadAttendanceData();
+                loadGreetings();
+            }, 300);
+        }
+        
+        // Fungsi untuk menampilkan notifikasi musik
+        function showMusicNotice(message) {
+            // Hapus notifikasi sebelumnya jika ada
+            const oldNotice = document.querySelector('.music-notice');
+            if (oldNotice) oldNotice.remove();
+            
+            // Buat elemen notifikasi baru
+            const notice = document.createElement('div');
+            notice.className = 'music-notice';
+            notice.textContent = message;
+            document.body.appendChild(notice);
+            
+            // Hapus notifikasi setelah 3 detik
+            setTimeout(() => {
+                if (notice.parentNode) {
+                    notice.remove();
+                }
+            }, 3000);
+        }
+        
+        // Fungsi untuk mengontrol musik
+        function toggleMusic() {
+            if (musicPlaying) {
+                music.pause();
+                document.getElementById('musicIcon').textContent = '🔇';
+                showMusicNotice("Musik dimatikan");
+            } else {
+                music.play().then(() => {
+                    document.getElementById('musicIcon').textContent = '🔊';
+                    showMusicNotice("Musik dihidupkan");
+                }).catch(error => {
+                    console.log("Error memutar musik: ", error);
+                    showMusicNotice("Gagal memutar musik");
+                });
+            }
+            musicPlaying = !musicPlaying;
+        }
+        
+        // Fungsi untuk mengatur volume
+        function setVolume(level) {
+            music.volume = level;
+            showMusicNotice(`Volume: ${Math.round(level * 100)}%`);
+        }
+        
+        // Countdown Timer
+        function updateCountdown() {
+            const eventDate = new Date('2025-12-15T09:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = eventDate - now;
+
+            if (distance < 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        // Update countdown setiap detik
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+        
+        // Fungsi untuk membuka peta
+        function openMap() {
+            window.open('https://maps.app.goo.gl/wxEReYjqoZuVqkZd6', '_blank');
+        }
+        
+        // Fungsi untuk menambahkan ke kalender
+        function addToCalendar() {
+            const eventDate = '20251215T090000';
+            const eventEndDate = '20251215T120000';
+            const eventTitle = 'Khitanan (Nama Anak)';
+            const eventLocation = '(Alamat Lengkap)';
+            const eventDetails = 'Acara khitanan putra dari (Nama Orang Tua)';
+            
+            // Format untuk Google Calendar
+            const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${eventDate}/${eventEndDate}&details=${encodeURIComponent(eventDetails)}&location=${encodeURIComponent(eventLocation)}`;
+            
+            window.open(googleCalendarUrl, '_blank');
+            showNotification("Ditambahkan ke Google Calendar");
+        }
+        
+        // Event listener untuk halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set volume awal
+            music.volume = 0.3;
+            
+            // Periksa apakah autoplay diizinkan
+            music.play().then(() => {
+                // Jika berhasil, pause dulu sampai undangan dibuka
+                music.pause();
+                musicPlaying = false;
+                document.getElementById('musicIcon').textContent = '🔇';
+            }).catch(error => {
+                console.log("Autoplay tidak diizinkan: ", error);
+                document.getElementById('musicIcon').textContent = '🔇';
+            });
+            
+            // Event listener untuk form ucapan selamat
+            document.getElementById('greetingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitGreeting();
+            });
+        });
+        
+        // Tambahkan kontrol volume tambahan
+        const musicBtn = document.getElementById('musicBtn');
+        musicBtn.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            const volumeLevel = prompt("Masukkan volume (0-100):", "30");
+            if (volumeLevel !== null) {
+                const volume = parseInt(volumeLevel) / 100;
+                if (volume >= 0 && volume <= 1) {
+                    setVolume(volume);
+                } else {
+                    alert("Volume harus antara 0-100");
+                }
+            }
+        });
+        
+        // ===================== FUNGSI BARU: SALIN NOMOR REKENING =====================
+        
+        // Fungsi untuk menyalin nomor rekening ke clipboard
+        function copyAccountNumber() {
+            const accountNumber = "1234 5678 9012 3456";
+            
+            // Menggunakan Clipboard API jika didukung
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(accountNumber.replace(/\s/g, '')).then(() => {
+                    showNotification("Nomor rekening berhasil disalin: " + accountNumber);
+                }).catch(err => {
+                    console.error('Gagal menyalin: ', err);
+                    fallbackCopyTextToClipboard(accountNumber);
+                });
+            } else {
+                fallbackCopyTextToClipboard(accountNumber);
+            }
+        }
+        
+        // Fallback untuk browser yang tidak mendukung Clipboard API
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text.replace(/\s/g, '');
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showNotification("Nomor rekening berhasil disalin: " + text);
+                } else {
+                    showNotification("Gagal menyalin nomor rekening");
+                }
+            } catch (err) {
+                console.error('Gagal menyalin: ', err);
+                showNotification("Gagal menyalin nomor rekening");
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        // ===================== FUNGSI BARU: KONFIRMASI KEHADIRAN =====================
+        
+        // Inisialisasi data kehadiran
+        let attendanceData = {
+            hadir: 0,
+            tidakHadir: 0,
+            userStatus: null
+        };
+        
+        // Muat data kehadiran dari localStorage
+        function loadAttendanceData() {
+            const savedData = localStorage.getItem('khitananAttendance');
+            if (savedData) {
+                attendanceData = JSON.parse(savedData);
+            }
+            
+            updateAttendanceUI();
+        }
+        
+        // Simpan data kehadiran ke localStorage
+        function saveAttendanceData() {
+            localStorage.setItem('khitananAttendance', JSON.stringify(attendanceData));
+            updateAttendanceUI();
+        }
+        
+        // Konfirmasi kehadiran
+        function confirmAttendance(status) {
+            // Reset status sebelumnya jika ada
+            if (attendanceData.userStatus === 'hadir') {
+                attendanceData.hadir--;
+            } else if (attendanceData.userStatus === 'tidak-hadir') {
+                attendanceData.tidakHadir--;
+            }
+            
+            // Set status baru
+            attendanceData.userStatus = status;
+            
+            // Tambah counter berdasarkan status
+            if (status === 'hadir') {
+                attendanceData.hadir++;
+            } else if (status === 'tidak-hadir') {
+                attendanceData.tidakHadir++;
+            }
+            
+            // Simpan ke localStorage
+            saveAttendanceData();
+            
+            // Tampilkan notifikasi
+            showNotification(`Jazakumullahu khairan! Status kehadiran Anda: ${status === 'hadir' ? 'Hadir' : 'Tidak Hadir'}`);
+        }
+        
+        // Update tampilan kehadiran
+        function updateAttendanceUI() {
+            // Update status user
+            const statusText = attendanceData.userStatus 
+                ? (attendanceData.userStatus === 'hadir' ? 'Hadir' : 'Tidak Hadir')
+                : 'Belum dikonfirmasi';
+            
+            document.getElementById('userAttendanceStatus').textContent = statusText;
+            
+            // Update counter
+            document.getElementById('hadirCount').textContent = attendanceData.hadir;
+            document.getElementById('tidakHadirCount').textContent = attendanceData.tidakHadir;
+            document.getElementById('totalCount').textContent = attendanceData.hadir + attendanceData.tidakHadir;
+            
+            // Update tombol yang dipilih
+            const buttons = document.querySelectorAll('.attendance-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            
+            if (attendanceData.userStatus === 'hadir') {
+                document.querySelector('.attendance-btn.hadir').classList.add('selected');
+            } else if (attendanceData.userStatus === 'tidak-hadir') {
+                document.querySelector('.attendance-btn.tidak-hadir').classList.add('selected');
+            }
+        }
+        
+        // ===================== FUNGSI BARU: UCAPAN SELAMAT =====================
+        let greetingsData = [];
+        
+        // Muat ucapan dari localStorage
+        function loadGreetings() {
+            const savedGreetings = localStorage.getItem('khitananGreetings');
+            if (savedGreetings) {
+                greetingsData = JSON.parse(savedGreetings);
+                displayGreetings();
+            }
+        }
+        
+        // Simpan ucapan ke localStorage
+        function saveGreetings() {
+            localStorage.setItem('khitananGreetings', JSON.stringify(greetingsData));
+            displayGreetings();
+        }
+        
+        // Kirim ucapan baru
+        function submitGreeting() {
+            const name = document.getElementById('guestName').value.trim();
+            const message = document.getElementById('greetingMessage').value.trim();
+            
+            if (!name || !message) {
+                alert('Harap isi nama dan ucapan selamat!');
+                return;
+            }
+            
+            const newGreeting = {
+                id: Date.now(),
+                name: name,
+                message: message,
+                time: getCurrentTime()
+            };
+            
+            greetingsData.unshift(newGreeting); // Tambah di awal array
+            saveGreetings();
+            
+            // Reset form
+            document.getElementById('greetingForm').reset();
+            
+            showNotification('Ucapan dan doa berhasil dikirim! Jazakumullahu khairan');
+        }
+        
+        // Tampilkan daftar ucapan
+        function displayGreetings() {
+            const greetingsList = document.getElementById('greetingsList');
+            
+            if (greetingsData.length === 0) {
+                greetingsList.innerHTML = '<div class="no-greetings">Belum ada ucapan. Jadilah yang pertama memberikan doa!</div>';
+                return;
+            }
+            
+            greetingsList.innerHTML = '';
+            
+            greetingsData.forEach(greeting => {
+                const greetingItem = document.createElement('div');
+                greetingItem.className = 'greeting-item';
+                greetingItem.innerHTML = `
+                    <div class="name">${greeting.name}</div>
+                    <div class="message">${greeting.message}</div>
+                    <div class="time">${greeting.time}</div>
+                `;
+                greetingsList.appendChild(greetingItem);
+            });
+        }
+        
+        // Fungsi untuk mendapatkan waktu saat ini
+        function getCurrentTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            return now.toLocaleDateString('id-ID', options);
+        }
+        
+        // Fungsi untuk menampilkan notifikasi
+        function showNotification(message) {
+            // Hapus notifikasi sebelumnya jika ada
+            const oldNotice = document.querySelector('.music-notice');
+            if (oldNotice) oldNotice.remove();
+            
+            // Buat elemen notifikasi baru
+            const notice = document.createElement('div');
+            notice.className = 'music-notice';
+            notice.textContent = message;
+            document.body.appendChild(notice);
+            
+            // Hapus notifikasi setelah 3 detik
+            setTimeout(() => {
+                if (notice.parentNode) {
+                    notice.remove();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
